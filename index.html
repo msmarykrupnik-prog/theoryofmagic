@@ -1,0 +1,149 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Теория магии</title>
+<style>
+:root{--noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");--gold:linear-gradient(180deg,#f7e6a6 0%,#cfa84e 42%,#8b6420 54%,#ecca72 100%)}
+html,body{height:100%;margin:0;background:transparent;font-family:Georgia,'Times New Roman',serif;overflow:hidden}
+.gold{background:var(--gold);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 0 rgba(0,0,0,.65))}
+.lth{background:var(--noise),radial-gradient(ellipse at 50% 35%,#21402f 0%,#112419 62%,#08130d 100%)}
+.scene{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;perspective:1800px;user-select:none}
+/* ---- корешок ---- */
+#slab{position:absolute;inset:0;margin:auto;width:min(92vw,150vh);aspect-ratio:4.4/1;height:auto;display:flex;border-radius:1.2vmin;cursor:pointer;box-shadow:0 2.4vmin 3vmin rgba(0,0,0,.5),inset 0 .4vmin .5vmin rgba(255,255,255,.18),inset 0 -.6vmin 1vmin rgba(0,0,0,.6);border:.25vmin solid #0a150f;transition:transform .7s ease,opacity .7s ease,filter .25s}
+#slab:hover{filter:brightness(1.18)}
+#slab.away{opacity:0;transform:rotateX(70deg) translateY(25%) scale(.9);pointer-events:none}
+#slab .end{flex:0 0 17%;margin:3.5% 1.5%;border:.3vmin solid #b8913f;display:flex;align-items:center;justify-content:center;font-size:min(5vw,9vh);background:repeating-linear-gradient(90deg,rgba(201,162,74,.5) 0 2px,transparent 2px 9px),radial-gradient(circle at 50% 50%,rgba(201,162,74,.35),transparent 70%)}
+#slab .mid{flex:1;margin:3.5% 0;border:.3vmin solid #b8913f;outline:.2vmin solid rgba(184,145,63,.5);outline-offset:.5vmin;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.12;text-align:center;letter-spacing:.14em;font-variant:small-caps;font-size:min(5.4vw,9.6vh)}
+#slab .mid small{font-size:.38em;letter-spacing:.3em;margin-top:.4em;opacity:.9}
+/* ---- раскрытая книга ---- */
+.wrap{--w:min(94vw,135vh);--u:calc(var(--w)/100);width:var(--w);height:calc(var(--w)/1.5);position:relative;display:none;transition:transform .7s ease,opacity .7s ease}
+.wrap.pre{opacity:0;transform:rotateX(-65deg) scale(.9)}
+.book{width:100%;height:100%;position:relative;transition:transform .7s ease;filter:drop-shadow(0 18px 22px rgba(0,0,0,.45))}
+.ui{position:absolute;inset:0;pointer-events:none;transition:transform .7s ease}
+.ui button{position:absolute;bottom:2.2%;pointer-events:auto}#prev{left:2.8%}#next{right:2.8%}
+.pg2{position:absolute;top:0;width:50%;height:100%;overflow:hidden}.pg2.L{left:0}.pg2.R{left:50%}
+.leaf{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;display:none}
+.leaf.go{transition:transform .9s cubic-bezier(.5,.1,.25,1)}
+.face{position:absolute;inset:0;overflow:hidden;box-sizing:border-box;color:#e7dcc0}
+.leaf .face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{transform:rotateY(180deg)}
+.face.front::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.45),transparent 9%);pointer-events:none}
+.face.back::after,.face.sl::after{content:"";position:absolute;inset:0;background:linear-gradient(270deg,rgba(0,0,0,.45),transparent 9%);pointer-events:none}
+.face.pg::before,.face.cv::before{content:"";position:absolute;inset:3.6%;border:1px solid rgba(214,177,95,.6);outline:1px solid rgba(214,177,95,.28);outline-offset:calc(var(--u)*.45);pointer-events:none}
+.face.cv::before{inset:4.5%;border-width:2px}
+.in{position:absolute;inset:8% 9% 9%;display:flex;flex-direction:column}
+.hd{text-align:center;font-variant:small-caps;letter-spacing:.3em;font-size:calc(var(--u)*1.35);margin-bottom:calc(var(--u)*1.4)}
+.fo{position:absolute;bottom:4.4%;left:0;right:0;text-align:center;font-size:calc(var(--u)*1.25)}
+.en{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 2%;border-bottom:1px solid rgba(214,177,95,.22);cursor:pointer;transition:background .2s}
+.en:last-child{border-bottom:0}.en:hover{background:rgba(214,177,95,.1)}
+.nm{font-size:calc(var(--u)*2.05);font-variant:small-caps;letter-spacing:.06em;width:max-content;max-width:100%}
+.mt{font-size:calc(var(--u)*1.1);opacity:.7;margin:calc(var(--u)*.2) 0}
+.sn{font-size:calc(var(--u)*1.25);line-height:1.35;opacity:.88}
+.ttlp{justify-content:center;align-items:center;text-align:center}
+.ttlp .big{font-size:calc(var(--u)*4.2);font-variant:small-caps;letter-spacing:.16em;line-height:1.1}
+.ttlp p{font-size:calc(var(--u)*1.5);margin:calc(var(--u)*1.2) 0;opacity:.85}
+.orn{font-size:calc(var(--u)*2.4)}
+.cov{justify-content:center;align-items:center;text-align:center}
+.cov .big{font-size:calc(var(--u)*5);font-variant:small-caps;letter-spacing:.14em;line-height:1.1;margin:calc(var(--u)*1.2) 0}
+.cov .sub{font-size:calc(var(--u)*1.5);letter-spacing:.32em}
+.cn{position:absolute;font-size:calc(var(--u)*3);line-height:1}
+button.nav{background:rgba(10,24,16,.7);color:#e9cf86;border:1px solid rgba(214,177,95,.7);border-radius:50%;width:clamp(30px,5vw,46px);height:clamp(30px,5vw,46px);font-size:clamp(14px,2.4vw,22px);cursor:pointer;transition:opacity .2s,background .2s}
+button.nav:hover{background:rgba(10,24,16,.95)}button.nav:disabled{opacity:0;pointer-events:none!important}
+/* ---- чтение на весь экран ---- */
+#rd{position:fixed;inset:0;z-index:50;display:none;overflow:auto;color:#eee3c6}
+#rd.on{display:block}
+#rd .rin{box-sizing:border-box;min-height:100%;max-width:820px;margin:0 auto;padding:max(7vmin,48px) 6vmin 12vmin;position:relative}
+#rd h1{font-size:clamp(30px,7vmin,64px);font-weight:normal;font-variant:small-caps;letter-spacing:.07em;margin:0 0 .2em;text-align:center}
+#rd .mt{text-align:center;font-size:clamp(14px,2.6vmin,22px);opacity:.75;margin-bottom:1.4em}
+#rd .dv{text-align:center;font-size:clamp(18px,3vmin,28px);margin-bottom:1.2em}
+#rd p{font-size:clamp(18px,3.5vmin,30px);line-height:1.55;margin:0;text-align:justify;hyphens:auto}
+#rd .x,#rd .pv,#rd .nx{position:fixed;background:rgba(10,24,16,.8);color:#e9cf86;border:1px solid rgba(214,177,95,.7);border-radius:50%;width:48px;height:48px;font-size:22px;cursor:pointer;z-index:2}
+#rd .x{top:14px;right:14px}#rd .pv{bottom:14px;left:14px}#rd .nx{bottom:14px;right:14px}
+</style></head><body>
+<div class="scene" id="scene">
+ <div id="slab" class="lth" role="button" tabindex="0" aria-label="Открыть книгу">
+  <div class="end gold">✦</div>
+  <div class="mid gold"><span>Theory</span><span>of Magic</span><small>справочник заклинаний</small></div>
+  <div class="end gold">✦</div>
+ </div>
+ <div class="wrap" id="wrap">
+  <div class="book" id="book"><div class="pg2 L" id="L"></div><div class="pg2 R" id="R"></div><div class="leaf" id="mv"></div></div>
+  <div class="ui" id="ui"><button class="nav" id="prev" aria-label="Назад">←</button><button class="nav" id="next" aria-label="Вперёд">→</button></div>
+ </div>
+</div>
+<div id="rd" class="lth"><button class="x" id="rx" aria-label="Закрыть">✕</button><button class="pv" id="rp" aria-label="Предыдущее">←</button><button class="nx" id="rn" aria-label="Следующее">→</button><div class="rin" id="rin"></div></div>
+<script>
+/* ===== ЗАКЛИНАНИЯ: чтобы добавить новое, скопируйте строку и поправьте (n — название, d — сложность, x — текст) ===== */
+const SPELLS=[
+{n:"Акцио",t:"чары",d:12,x:"Призывает объект к заклинательнице. Заклинатели должны быть в состоянии представить образ объекта, но им необязательно знать его точное местоположение. Объект физически передвигается по направлению к заклинательнице, поэтому ему может потребоваться некоторое время, чтобы прибыть, если он находится очень далеко. Заклинание не может вызывать объекты, защищённые Противоугонными чарами. Рассказчица может ограничить расстояние действия эффекта."},
+{n:"Чары горячего воздуха",t:"чары",d:9,x:"Испускает струю тёплого воздуха из палочки. Полезно для сушки влажных халатов, таяния снега, согревания холодных рук и других подобных задач."},
+{n:"Ридикулус",t:"чары",d:15,x:"Заклинание изгнания боггарта. Побеждает боггарта, заставляя его принять юмористическую форму, лишая его способности устрашать. Как только боггарт побеждён смехом, он немедленно изгоняется и исчезает."},
+{n:"Репаро",t:"чары",d:12,x:"Восстанавливающие чары. Безупречно восстанавливают сломанный объект. Вербальная формула часто указывает на предмет, подлежащий ремонту (например, Окулус Репаро для ремонта очков). Урон, нанесённый мощными проклятиями, такими как Адское пламя, невозможно исправить. Удачное сотворение не только восстановит объект, но и вернёт воду в ёмкости, расставит книги по полкам и так далее. Чары не действуют на могущественные или сложные магические предметы, такие как исчезательные шкафы и волшебные палочки. Хотя они и могут восстановить внешний вид предмета, но магическая функция останется нарушенной. Данное заклинание может оказаться очень полезным при нахождении части какого-либо предмета, если по останкам сложно определить что это. Репаро позволит пролить свет на внешний вид улики до её уничтожения. Неприменимо к плоти."},
+{n:"Ревелио",t:"чары",d:15,x:"Обнаруживает скрытые объекты, проходы и невидимые сообщения. Может раскрыть истинную внешность того, кто магически замаскирован."},
+{n:"Протего",t:"чары",d:15,x:"Щитовые чары. Защищают заклинателя невидимым барьером, блокирующим все физические и магические атаки, кроме могущественных сглазов, порч и проклятий (не блокируют непростительные заклятия). Урон, наносимый за любую атаку, попавшую в барьер, уменьшается на 30 единиц. Если несколько заклинаний поразят вас одновременно, защита будет распределена между всеми равномерно, например, урон от трёх одновременных взрывов будет уменьшен на 10 единиц каждый."},
+{n:"Охранные чары",t:"чары",d:9,x:"Эквивалент магической охранной сигнализации. Звучит сигнал тревоги, когда злоумышленники входят в защищённое пространство. Похоже на Воющие чары, но в два раза громче."},
+{n:"Облегчающие чары",t:"чары",d:12,x:"Делает предмет лёгким, как пёрышко. Могут быть отменены Фините Инкантатем, массовым контрзаклинанием."},
+{n:"Нокс",t:"чары",d:12,x:"Чары тушения света. Контрчары для световых чар Люмос."},
+{n:"Люмос",t:"чары",d:9,x:"Световые чары. Чары, зажигающие огонёк света на конце волшебной палочки заклинательницы. Световые чары не требуют никаких особых жестов и вращений палочки. Она должна быть просто вытянута перед собой. Свет может быть потушен заклинанием Нокс, чарами тушения огня."},
+{n:"Конфундус",t:"чары",d:15,x:"Чары приводят жертву в замешательство и сбивают с толку. Цель сразу же получает состояние «в замешательстве» на один раунд. Каждый следующий раунд она может бросить 1D + сообразительность с целевым значением 12, чтобы устранить эффект. Мощные чары Конфундус могут сделать цель очень впечатлительной и открытой для внушения. Чары могут применяться для нарушения работы различных магических предметов. Не относится к Непростительным заклятиям, поскольку воля человека, подвергнутого Конфундусу, остаётся свободной. Он просто несколько теряет ориентацию в пространстве и собственных действиях. Может быть снят различными заклинаниями, («Гибель воров» и, возможно, «Финита»). Конфундус могут накладывать на маглов, живущих рядом с волшебниками. Об этом упоминается в книге «История магии» Батильды Бэгшот."},
+{n:"Импервиус",t:"чары",d:9,x:"Заставляет объект отталкивать воду и туман. Идеально подходит для добавления водоотталкивающих свойств одежде, очкам, бумаге и т.д."},
+{n:"Заклинание заметания следов",t:"чары",d:9,x:"Удаляет любые следы перемещения, включая следы ног, другие отпечатки, пятна и метки."},
+{n:"Диминуэндо",t:"чары",d:15,x:"Уменьшает объекты. Не путать с чарами Редуцио, которое возвращает увеличенные объекты к их первоначальному размеру, например, противодействуя Энгоргио. Гиппогрифы и крылатые кони могут принадлежать волшебникам только в том случае, если владелец ежедневно выполняет это заклинание."},
+{n:"Вингардиум Левиоса",t:"чары",d:9,x:"Левитационные чары. Одно из первых заклинаний, которым обучают любую молодую волшебницу или волшебника. Заставляет неодушевлённый предмет летать или левитировать. Чем легче предмет, тем дольше его можно удерживать в воздухе. Не действует на живых созданий, но может быть сотворено на одежду человека, чтобы поднять его в воздух."},
+{n:"Веселящие чары",t:"чары",d:9,x:"Заставляет цель чувствовать себя счастливой. Чрезмерное употребление может привести к истерии."},
+{n:"Баубиллиус",t:"чары",d:12,x:"Испускает белые искры с кончика палочки. Может использоваться в дуэлях, схватках и для подачи сигнала. Искры наносят 3D + сосредоточенность урона всему, к чему прикасаются."},
+{n:"Апарекиум",t:"чары",d:12,x:"Раскрывает тайные послания, написанные невидимыми чернилами или замаскированные Скрывающими чарами."},
+{n:"Алохомора",t:"чары",d:12,x:"Отпирает двери и другие объекты. Может открыть все двери, запертые магловскими замками, даже те, которые они считают особо надёжными. Противостоит запирающему заклинанию Коллопортус, но может попробовать противодействовать и более сильным чарам Анти-Алохомора."}
+];
+SPELLS.sort((a,b)=>a.n.localeCompare(b.n,'ru'));
+const PER=5,$=id=>document.getElementById(id);
+const snip=x=>{let s=x.split('. ')[0];if(s.length>95)s=s.slice(0,92).replace(/\s+\S*$/,'')+'…';return s};
+/* ---- страницы ---- */
+const blank={h:'',c:'pg lth'};
+const cover={h:'<div class="in cov"><div class="cn gold" style="top:-2%;left:-2%">❦</div><div class="cn gold" style="top:-2%;right:-2%;transform:scaleX(-1)">❦</div><div class="cn gold" style="bottom:-2%;left:-2%;transform:scaleY(-1)">❦</div><div class="cn gold" style="bottom:-2%;right:-2%;transform:scale(-1)">❦</div><div class="orn gold">❖ ✦ ❖</div><div class="big gold">Theory<br>of Magic</div><div class="orn gold">— ✦ —</div><div class="sub gold" style="margin-top:6%">СПРАВОЧНИК ЗАКЛИНАНИЙ</div></div>',c:'cv lth'};
+const bcov={h:'<div class="in cov"><div class="big gold" style="font-size:calc(var(--u)*9)">✦</div></div>',c:'cv lth'};
+const title={h:'<div class="in ttlp"><div class="orn gold">❖</div><div class="big gold">Заклинания</div><div class="orn gold">— ✦ —</div><p>всего записей: '+SPELLS.length+'</p><p>нажмите на заклинание, чтобы прочитать его целиком</p></div>',c:'pg lth'};
+const P=[title];
+for(let j=0;j*PER<SPELLS.length;j++){
+ const items=SPELLS.slice(j*PER,j*PER+PER).map((s,k)=>{const i=j*PER+k;return '<div class="en" data-i="'+i+'"><div class="nm gold">'+s.n+'</div><div class="mt">'+s.t+' · сложность '+s.d+'</div><div class="sn">'+snip(s.x)+'</div></div>'}).join('');
+ P.push({h:'<div class="in"><div class="hd gold">Заклинания</div>'+items+'</div>',c:'pg lth',n:1});
+}
+while((P.length-1)%2!==0)P.push(blank);
+P.forEach((p,i)=>{if(i>0&&p!==blank)p.h+='<div class="fo gold">'+i+'</div>'});
+const leaves=[[cover,P[0]]];
+for(let k=1;2*k<P.length;k++)leaves.push([P[2*k-1],P[2*k]]);
+leaves.push([blank,bcov]);
+/* ---- движок листания ---- */
+const wrap=$('wrap'),slab=$('slab'),book=$('book'),L=$('L'),R=$('R'),mv=$('mv'),N=leaves.length;
+let cur=-1,busy=false;
+const mk=(f,m)=>{const d=document.createElement('div');d.className='face '+m+' '+(f.c||'');d.innerHTML=f.h;return d};
+const setPg=(el,f,m)=>{el.innerHTML='';if(f)el.appendChild(mk(f,m))};
+function upd(){const t=cur<=0?'translateX(-25%)':cur===N?'translateX(25%)':'none';book.style.transform=t;$('ui').style.transform=t;
+ $('prev').disabled=false;$('next').disabled=cur===N}
+function openBook(){busy=true;wrap.style.display='flex';wrap.classList.add('pre');setPg(L,null);setPg(R,leaves[0][0],'front');cur=0;upd();
+ void wrap.offsetWidth;slab.classList.add('away');wrap.classList.remove('pre');setTimeout(()=>busy=false,750)}
+function closeBook(){busy=true;slab.classList.remove('away');wrap.classList.add('pre');setTimeout(()=>{wrap.style.display='none';cur=-1;busy=false},750)}
+function go(d){if(busy)return;if(cur===-1){if(d>0)openBook();return}
+ if(cur===0&&d<0){closeBook();return}
+ const n=cur+d;if(n<0||n>N)return;busy=true;const k=d>0?cur:n;
+ mv.innerHTML='';mv.appendChild(mk(leaves[k][0],'front'));mv.appendChild(mk(leaves[k][1],'back'));
+ mv.classList.remove('go');mv.style.display='block';mv.style.transform=d>0?'rotateY(0deg)':'rotateY(-180deg)';
+ if(d>0)setPg(R,n<N?leaves[n][0]:null,'front');else setPg(L,k>0?leaves[k-1][1]:null,'sl');
+ void mv.offsetWidth;mv.classList.add('go');mv.style.transform=d>0?'rotateY(-180deg)':'rotateY(0deg)';
+ cur=n;upd();
+ setTimeout(()=>{if(d>0)setPg(L,leaves[k][1],'sl');else setPg(R,leaves[k][0],'front');mv.style.display='none';busy=false},940)}
+slab.onclick=()=>go(1);slab.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')go(1)};
+$('next').onclick=()=>go(1);$('prev').onclick=()=>go(-1);
+let x0=null;addEventListener('touchstart',e=>x0=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(x0===null||rdOn())return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(dx<0?1:-1);x0=null});
+/* ---- чтение ---- */
+let ri=0;const rd=$('rd');const rdOn=()=>rd.classList.contains('on');
+function show(i){ri=(i+SPELLS.length)%SPELLS.length;const s=SPELLS[ri];
+ $('rin').innerHTML='<h1 class="gold">'+s.n+'</h1><div class="mt">'+s.t+' · сложность '+s.d+'</div><div class="dv gold">— ✦ —</div><p>'+s.x+'</p>';rd.scrollTop=0}
+function openR(i){show(i);rd.classList.add('on');if(rd.requestFullscreen){const f=rd.requestFullscreen();if(f&&f.catch)f.catch(()=>{})}}
+function closeR(){rd.classList.remove('on');if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&rdOn())rd.classList.remove('on')});
+document.addEventListener('click',e=>{const en=e.target.closest&&e.target.closest('.en');if(en&&!busy)openR(+en.dataset.i)});
+$('rx').onclick=closeR;$('rp').onclick=()=>show(ri-1);$('rn').onclick=()=>show(ri+1);
+addEventListener('keydown',e=>{if(rdOn()){if(e.key==='Escape')closeR();if(e.key==='ArrowRight')show(ri+1);if(e.key==='ArrowLeft')show(ri-1);return}
+ if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1)});
+</script></body></html>
